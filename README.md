@@ -2,10 +2,10 @@
 
 Для корректной работы программы:
 ```
-sudo apt-get install lm-sensors
+sudo apt-get install lm-sensors -y
 ```
 ```
-sudo apt-get install fail2ban
+sudo apt-get install fail2ban -y
 ```
 ```
 sudo visudo
