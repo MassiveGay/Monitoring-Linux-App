@@ -15,7 +15,7 @@ using System.Diagnostics;
 namespace Monitoring {
     public partial class Form1 : Form {
         SshClient ssh;
-        bool isConnewcted = false;
+        bool isConnected = false;
 
         public Form1() {
             InitializeComponent();
@@ -38,43 +38,29 @@ namespace Monitoring {
 
         private void onConnectClick(object sender, EventArgs e) {
             try {
-                if (isConnewcted)
+                if (isConnected)
                     ssh.Disconnect();
+                //
                 string adres = AddresLine.Text;
-                int port = 22;
-                if (AddresLine.Text.Contains(':')) {
-                    adres = adres.Substring(0, AddresLine.Text.IndexOf(':'));
-                    port = int.Parse(AddresLine.Text.Substring(AddresLine.Text.IndexOf(':') + 1));
-                }
+                int port = int.Parse(PortLine.Text);
                 string userName = UsernameLine.Text;
                 string password = PasswordLine.Text;
-
                 ssh = new SshClient(adres, port, userName, password);
                 ssh.Connect();
-                var names = ssh.RunCommand("ls /etc/systemd/system | grep .service").Result;
-                String[] words = names.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                //
+                var DaemonNames = ssh.RunCommand("ls /etc/systemd/system | grep .service").Result;
+                String[] words = DaemonNames.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 name_list.Items.AddRange(words);
-                var resultData = ssh.RunCommand("df -H /dev/sda1 --output=used").Result;
-                string[] lines = resultData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                string DiskUsed = string.Join("\n", lines.Where(s => s.EndsWith("G")).Select(s => s.Remove(s.IndexOf('G'))));
-                var procentsData = ssh.RunCommand("df -H /dev/sda1").Result;
-                //string[] OhNo = procentsData.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                //string DiskProcents = string.Join("\n", OhNo.Where(s => s.EndsWith("%")).Select(s => s.Remove(s.IndexOf('%'))));
-                packageInstallgroup.Enabled = true;
-                NewConn.Enabled = true;
-                ControlGroup.Enabled = true;
-                SystemctlGroup.Enabled = true;
-                isConnewcted = true;
-                TempBox.Enabled = true;
-                AddresLine.Enabled = false;
-                UsernameLine.Enabled = false;
-                PasswordLine.Enabled = false;
-                Connection.Enabled = false;
-                DiskInfo_group.Enabled = true;
-                DiskInfo.Value = Convert.ToInt32(DiskUsed);
-                diskInfoLabel.Text = $"used: {DiskUsed}G";
-                ftpGroup.Enabled = true;
+                //
+                var procentUsed = ssh.RunCommand("df -h / --output=pcent").Result;
+                string deleteBlyat = procentUsed.Substring(4);
+                string[] lines = deleteBlyat.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                string DiskUsed = string.Join("\n", lines.Where(s => s.EndsWith("%")).Select(s => s.Remove(s.IndexOf('%'))));
+                DiskInfo.Value = int.Parse(DiskUsed);
+                //
+                GUIonConnect();
                 autoTemperatureUpdate();
+                //
             } catch (Renci.SshNet.Common.SshAuthenticationException) {
                 var hhhh = MessageBox.Show("Incorrect data"
                     , "Problems with access to JoyCasino",
@@ -87,68 +73,94 @@ namespace Monitoring {
                     MessageBoxIcon.Error);
             }
         }
-
-        private void AddresLine_TextChanged(object sender, EventArgs e) {
-
+        public void GUIonConnect() {
+            packageInstallgroup.Enabled = true;
+            NewConn.Enabled = true;
+            ControlGroup.Enabled = true;
+            SystemctlGroup.Enabled = true;
+            isConnected = true;
+            TempBox.Enabled = true;
+            AddresLine.Enabled = false;
+            UsernameLine.Enabled = false;
+            PasswordLine.Enabled = false;
+            Connection.Enabled = false;
+            DiskInfo_group.Enabled = true;
+            ftpGroup.Enabled = true;
+            Fail2ban_group.Enabled = true;
+            PortLine.Enabled = false;
         }
 
         private void onStatusBtnClick(object sender, EventArgs e) {
             string Service_Name = name_list.Text;
-            var systemctl = ssh.RunCommand("systemctl status " + Service_Name).Result;
-            systemctlOut.Text = systemctl;
+            var systemctlStatus = ssh.RunCommand("systemctl status " + Service_Name).Result;
+            systemctlOut.Text = systemctlStatus;
         }
 
         private void onStartBtnCLick(object sender, EventArgs e) {
             string Service_Name = name_list.Text;
-            var systemctl = ssh.RunCommand("sudo systemctl start " + Service_Name);
+            var systemctlStart = ssh.RunCommand("sudo systemctl start " + Service_Name);
         }
 
         private void onStopBtnClick(object sender, EventArgs e) {
             string Service_Name = name_list.Text;
-            var systemctl = ssh.RunCommand($"sudo systemctl stop {Service_Name}");
+            var systemctlStop = ssh.RunCommand($"sudo systemctl stop {Service_Name}");
         }
 
         private void onRestartBtnClick(object sender, EventArgs e) {
             string Service_Name = name_list.Text;
-            var systemctl = ssh.RunCommand($"sudo systemctl restart {Service_Name}");
-        }
-
-        private void DiskUsedProgressBar(object sender, EventArgs e) {
-            DiskInfo.Value = 27;
+            var systemctlRestart = ssh.RunCommand($"sudo systemctl restart {Service_Name}");
         }
 
         private void RebootBtn(object sender, EventArgs e) {
             ControlGroup.Enabled = false;
             SystemctlGroup.Enabled = false;
-            isConnewcted = false;
+            isConnected = false;
             TempBox.Enabled = false;
-            var systemctl = ssh.RunCommand("sudo reboot now");
-            ssh.Disconnect();
+            var Reboot = ssh.RunCommand("sudo reboot now");
+            try {
+                ssh.Disconnect();
+                NewConn_Click(NewConn, null);
+            } catch (Renci.SshNet.Common.SshConnectionException) {
+                var ErrorConnection = MessageBox.Show("Server reboot",
+                    "Client is disconnected",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            
         }
 
         private void ShutdownBtn(object sender, EventArgs e) {
             ControlGroup.Enabled = false;
             SystemctlGroup.Enabled = false;
-            isConnewcted = false;
+            isConnected = false;
             TempBox.Enabled = false;
-            var systemctl = ssh.RunCommand("sudo shutdown now");
-            ssh.Disconnect();
+            var shutdown = ssh.RunCommand("sudo shutdown now");
+            try {
+                ssh.Disconnect();
+                NewConn_Click(NewConn, null);
+            } catch (Renci.SshNet.Common.SshConnectionException) {
+                var ErrorConnection = MessageBox.Show("Server reboot",
+                    "Client is disconnected",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
         }
 
         private void NewConn_Click(object sender, EventArgs e) {
-            ftpLog.Clear();
-            ftpPass.Clear();
+            name_list.Items.IndexOf(-1);
+            ftpLog.Text = "Login";
+            ftpPass.Text = "Password";
             name_list.Items.Clear();
             systemctlOut.Clear();
+            PortLine.Enabled = true;
             packageInstallgroup.Enabled = false;
             ftpGroup.Enabled = false;
             DiskInfo.Value = 0;
             ControlGroup.Enabled = false;
             SystemctlGroup.Enabled = false;
-            isConnewcted = false;
+            isConnected = false;
             TempBox.Enabled = false;
             DiskInfo_group.Enabled = false;
-            ssh.Disconnect();
             AddresLine.Clear();
             UsernameLine.Clear();
             PasswordLine.Clear();
@@ -156,6 +168,7 @@ namespace Monitoring {
             AddresLine.Enabled = true;
             PasswordLine.Enabled = true;
             Connection.Enabled = true;
+            Fail2ban_group.Enabled = false;
         }
 
         private void ftpOpen(object sender, EventArgs e) {
@@ -163,7 +176,6 @@ namespace Monitoring {
         }
 
         private void UpdateCollection_Click(object sender, EventArgs e) {
-            diskInfoLabel.Text = "used:";
             name_list.Items.Clear();
             var names = ssh.RunCommand("ls /etc/systemd/system | grep .service").Result;
             String[] words = names.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -171,11 +183,31 @@ namespace Monitoring {
         }
 
         private void onButtonInstallClick(object sender, EventArgs e) {
-            var systemctl = ssh.RunCommand($"sudo apt install -y {packageNameText.Text}");
+            var Install = ssh.RunCommand($"sudo apt install -y {packageNameText.Text}");
         }
 
         private void onRemoveButtonClick(object sender, EventArgs e) {
-            var systemctl = ssh.RunCommand($"sudo apt remove -y {packageNameText.Text}");
+            var Remove = ssh.RunCommand($"sudo apt remove -y {packageNameText.Text}");
+        }
+
+        private void OpenForm3_Click(object sender, EventArgs e) {
+            SSH_Data_Transf.Adres = AddresLine.Text;
+            SSH_Data_Transf.Port = PortLine.Text;
+            SSH_Data_Transf.Username = UsernameLine.Text;
+            SSH_Data_Transf.Password = PasswordLine.Text;
+            Form f2 = new Form3();
+            f2.Show();
+        }
+
+        void Form1_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyValue == (char)Keys.Enter) {
+                onConnectClick(Connection, null);
+            }
+        }
+        private void AddresLine_TextChanged(object sender, EventArgs e) {
+
+        }
+        private void DiskUsedProgressBar(object sender, EventArgs e) {
         }
     }
 }

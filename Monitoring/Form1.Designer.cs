@@ -39,6 +39,8 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.TempBox = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.PortLine = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.NewConn = new System.Windows.Forms.Button();
             this.SystemctlGroup = new System.Windows.Forms.GroupBox();
             this.UpdateCollection = new System.Windows.Forms.Button();
@@ -53,9 +55,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.DiskInfo = new System.Windows.Forms.ProgressBar();
-            this.label2 = new System.Windows.Forms.Label();
             this.DiskInfo_group = new System.Windows.Forms.GroupBox();
-            this.diskInfoLabel = new System.Windows.Forms.Label();
             this.ftpGroup = new System.Windows.Forms.GroupBox();
             this.ftpPass = new System.Windows.Forms.TextBox();
             this.ftpLog = new System.Windows.Forms.TextBox();
@@ -65,6 +65,9 @@
             this.button8 = new System.Windows.Forms.Button();
             this.button7 = new System.Windows.Forms.Button();
             this.packageNameText = new System.Windows.Forms.TextBox();
+            this.Fail2ban_group = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button9 = new System.Windows.Forms.Button();
             this.TempBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SystemctlGroup.SuspendLayout();
@@ -72,13 +75,14 @@
             this.DiskInfo_group.SuspendLayout();
             this.ftpGroup.SuspendLayout();
             this.packageInstallgroup.SuspendLayout();
+            this.Fail2ban_group.SuspendLayout();
             this.SuspendLayout();
             // 
             // Connection
             // 
             this.Connection.Location = new System.Drawing.Point(6, 147);
             this.Connection.Name = "Connection";
-            this.Connection.Size = new System.Drawing.Size(100, 25);
+            this.Connection.Size = new System.Drawing.Size(105, 25);
             this.Connection.TabIndex = 0;
             this.Connection.Text = "Connection";
             this.Connection.UseVisualStyleBackColor = true;
@@ -88,7 +92,7 @@
             // 
             this.AddresLine.Location = new System.Drawing.Point(6, 43);
             this.AddresLine.Name = "AddresLine";
-            this.AddresLine.Size = new System.Drawing.Size(100, 20);
+            this.AddresLine.Size = new System.Drawing.Size(90, 20);
             this.AddresLine.TabIndex = 2;
             this.AddresLine.TextChanged += new System.EventHandler(this.AddresLine_TextChanged);
             // 
@@ -96,7 +100,7 @@
             // 
             this.UsernameLine.Location = new System.Drawing.Point(6, 82);
             this.UsernameLine.Name = "UsernameLine";
-            this.UsernameLine.Size = new System.Drawing.Size(100, 20);
+            this.UsernameLine.Size = new System.Drawing.Size(131, 20);
             this.UsernameLine.TabIndex = 3;
             // 
             // PasswordLine
@@ -104,7 +108,7 @@
             this.PasswordLine.Location = new System.Drawing.Point(6, 121);
             this.PasswordLine.Name = "PasswordLine";
             this.PasswordLine.PasswordChar = '*';
-            this.PasswordLine.Size = new System.Drawing.Size(100, 20);
+            this.PasswordLine.Size = new System.Drawing.Size(131, 20);
             this.PasswordLine.TabIndex = 4;
             // 
             // Username
@@ -139,7 +143,7 @@
             this.richTextBox1.Location = new System.Drawing.Point(6, 22);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(147, 36);
+            this.richTextBox1.Size = new System.Drawing.Size(120, 36);
             this.richTextBox1.TabIndex = 10;
             this.richTextBox1.Text = "";
             // 
@@ -149,13 +153,15 @@
             this.TempBox.Enabled = false;
             this.TempBox.Location = new System.Drawing.Point(450, 323);
             this.TempBox.Name = "TempBox";
-            this.TempBox.Size = new System.Drawing.Size(160, 77);
+            this.TempBox.Size = new System.Drawing.Size(133, 77);
             this.TempBox.TabIndex = 11;
             this.TempBox.TabStop = false;
             this.TempBox.Text = "Temperature";
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.PortLine);
+            this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.NewConn);
             this.groupBox1.Controls.Add(this.AddresLine);
             this.groupBox1.Controls.Add(this.Connection);
@@ -164,19 +170,36 @@
             this.groupBox1.Controls.Add(this.PasswordLine);
             this.groupBox1.Controls.Add(this.Password);
             this.groupBox1.Controls.Add(this.Username);
-            this.groupBox1.Location = new System.Drawing.Point(616, 321);
+            this.groupBox1.Location = new System.Drawing.Point(589, 321);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(116, 177);
+            this.groupBox1.Size = new System.Drawing.Size(143, 177);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Connection";
             // 
+            // PortLine
+            // 
+            this.PortLine.Location = new System.Drawing.Point(102, 43);
+            this.PortLine.Name = "PortLine";
+            this.PortLine.Size = new System.Drawing.Size(35, 20);
+            this.PortLine.TabIndex = 11;
+            this.PortLine.Text = "22";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(99, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(26, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Port";
+            // 
             // NewConn
             // 
             this.NewConn.Enabled = false;
-            this.NewConn.Location = new System.Drawing.Point(86, 14);
+            this.NewConn.Location = new System.Drawing.Point(117, 147);
             this.NewConn.Name = "NewConn";
-            this.NewConn.Size = new System.Drawing.Size(20, 21);
+            this.NewConn.Size = new System.Drawing.Size(20, 25);
             this.NewConn.TabIndex = 8;
             this.NewConn.Text = "+";
             this.NewConn.UseVisualStyleBackColor = true;
@@ -309,44 +332,22 @@
             // 
             // DiskInfo
             // 
-            this.DiskInfo.Location = new System.Drawing.Point(9, 55);
-            this.DiskInfo.Maximum = 240;
+            this.DiskInfo.Location = new System.Drawing.Point(9, 32);
             this.DiskInfo.Name = "DiskInfo";
-            this.DiskInfo.Size = new System.Drawing.Size(238, 30);
+            this.DiskInfo.Size = new System.Drawing.Size(216, 40);
             this.DiskInfo.TabIndex = 16;
             this.DiskInfo.Click += new System.EventHandler(this.DiskUsedProgressBar);
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Matura MT Script Capitals", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(12, 38);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 14);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "/dev/sda1";
-            // 
             // DiskInfo_group
             // 
-            this.DiskInfo_group.Controls.Add(this.diskInfoLabel);
             this.DiskInfo_group.Controls.Add(this.DiskInfo);
-            this.DiskInfo_group.Controls.Add(this.label2);
             this.DiskInfo_group.Enabled = false;
             this.DiskInfo_group.Location = new System.Drawing.Point(12, 403);
             this.DiskInfo_group.Name = "DiskInfo_group";
-            this.DiskInfo_group.Size = new System.Drawing.Size(258, 95);
+            this.DiskInfo_group.Size = new System.Drawing.Size(231, 95);
             this.DiskInfo_group.TabIndex = 18;
             this.DiskInfo_group.TabStop = false;
             this.DiskInfo_group.Text = "Disk info";
-            // 
-            // diskInfoLabel
-            // 
-            this.diskInfoLabel.AutoSize = true;
-            this.diskInfoLabel.Location = new System.Drawing.Point(73, 39);
-            this.diskInfoLabel.Name = "diskInfoLabel";
-            this.diskInfoLabel.Size = new System.Drawing.Size(33, 13);
-            this.diskInfoLabel.TabIndex = 19;
-            this.diskInfoLabel.Text = "used:";
             // 
             // ftpGroup
             // 
@@ -354,7 +355,7 @@
             this.ftpGroup.Controls.Add(this.ftpLog);
             this.ftpGroup.Controls.Add(this.button6);
             this.ftpGroup.Enabled = false;
-            this.ftpGroup.Location = new System.Drawing.Point(276, 403);
+            this.ftpGroup.Location = new System.Drawing.Point(249, 403);
             this.ftpGroup.Name = "ftpGroup";
             this.ftpGroup.Size = new System.Drawing.Size(79, 95);
             this.ftpGroup.TabIndex = 19;
@@ -395,9 +396,9 @@
             this.packageInstallgroup.Controls.Add(this.button7);
             this.packageInstallgroup.Controls.Add(this.packageNameText);
             this.packageInstallgroup.Enabled = false;
-            this.packageInstallgroup.Location = new System.Drawing.Point(361, 403);
+            this.packageInstallgroup.Location = new System.Drawing.Point(334, 403);
             this.packageInstallgroup.Name = "packageInstallgroup";
-            this.packageInstallgroup.Size = new System.Drawing.Size(248, 95);
+            this.packageInstallgroup.Size = new System.Drawing.Size(122, 95);
             this.packageInstallgroup.TabIndex = 20;
             this.packageInstallgroup.TabStop = false;
             this.packageInstallgroup.Text = "Package install";
@@ -405,7 +406,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(87, 16);
+            this.label3.Location = new System.Drawing.Point(6, 16);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(79, 13);
             this.label3.TabIndex = 3;
@@ -413,9 +414,9 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(135, 59);
+            this.button8.Location = new System.Drawing.Point(59, 59);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(107, 23);
+            this.button8.Size = new System.Drawing.Size(55, 23);
             this.button8.TabIndex = 2;
             this.button8.Text = "Remove";
             this.button8.UseVisualStyleBackColor = true;
@@ -425,7 +426,7 @@
             // 
             this.button7.Location = new System.Drawing.Point(7, 59);
             this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(107, 23);
+            this.button7.Size = new System.Drawing.Size(46, 23);
             this.button7.TabIndex = 1;
             this.button7.Text = "Install";
             this.button7.UseVisualStyleBackColor = true;
@@ -435,17 +436,49 @@
             // 
             this.packageNameText.Location = new System.Drawing.Point(7, 32);
             this.packageNameText.Name = "packageNameText";
-            this.packageNameText.Size = new System.Drawing.Size(235, 20);
+            this.packageNameText.Size = new System.Drawing.Size(107, 20);
             this.packageNameText.TabIndex = 0;
+            // 
+            // Fail2ban_group
+            // 
+            this.Fail2ban_group.Controls.Add(this.label4);
+            this.Fail2ban_group.Controls.Add(this.button9);
+            this.Fail2ban_group.Enabled = false;
+            this.Fail2ban_group.Location = new System.Drawing.Point(462, 403);
+            this.Fail2ban_group.Name = "Fail2ban_group";
+            this.Fail2ban_group.Size = new System.Drawing.Size(121, 95);
+            this.Fail2ban_group.TabIndex = 21;
+            this.Fail2ban_group.TabStop = false;
+            this.Fail2ban_group.Text = "fail2ban";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.SystemColors.ButtonShadow;
+            this.label4.Location = new System.Drawing.Point(6, 32);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(97, 13);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Unban on Fail2ban";
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(9, 59);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(105, 23);
+            this.button9.TabIndex = 0;
+            this.button9.Text = "Open";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.OpenForm3_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(744, 500);
+            this.Controls.Add(this.Fail2ban_group);
             this.Controls.Add(this.packageInstallgroup);
             this.Controls.Add(this.ftpGroup);
             this.Controls.Add(this.DiskInfo_group);
@@ -456,8 +489,11 @@
             this.Controls.Add(this.TempBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Monitoring";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.TempBox.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -465,11 +501,12 @@
             this.SystemctlGroup.PerformLayout();
             this.ControlGroup.ResumeLayout(false);
             this.DiskInfo_group.ResumeLayout(false);
-            this.DiskInfo_group.PerformLayout();
             this.ftpGroup.ResumeLayout(false);
             this.ftpGroup.PerformLayout();
             this.packageInstallgroup.ResumeLayout(false);
             this.packageInstallgroup.PerformLayout();
+            this.Fail2ban_group.ResumeLayout(false);
+            this.Fail2ban_group.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -498,12 +535,10 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ProgressBar DiskInfo;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox DiskInfo_group;
         private System.Windows.Forms.Button NewConn;
         private System.Windows.Forms.GroupBox ftpGroup;
         private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Label diskInfoLabel;
         private System.Windows.Forms.Button UpdateCollection;
         private System.Windows.Forms.GroupBox packageInstallgroup;
         private System.Windows.Forms.Label label3;
@@ -512,6 +547,11 @@
         private System.Windows.Forms.TextBox packageNameText;
         private System.Windows.Forms.TextBox ftpPass;
         private System.Windows.Forms.TextBox ftpLog;
+        private System.Windows.Forms.GroupBox Fail2ban_group;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox PortLine;
     }
 }
 
