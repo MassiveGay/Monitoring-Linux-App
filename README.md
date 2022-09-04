@@ -8,8 +8,8 @@ sudo apt-get install lm-sensors -y
 sudo apt-get install fail2ban -y
 ```
 ```
-sudo visudo
+> sudo visudo
 После строки root ALL=(ALL:ALL) NOPASSWD: ALL добавьте:
-%username% ALL=(ALL:ALL) NOPASSWD: ALL
+> %username% ALL=(ALL:ALL) NOPASSWD: ALL
 ```
 - Вместо ALL можно вписать только требуемые программой команды
