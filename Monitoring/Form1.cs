@@ -111,8 +111,8 @@ namespace Monitoring {
 
         private void RebootBtn(object sender, EventArgs e) {
             try {
-                var Reboot = ssh.RunCommand("sudo reboot now");
                 NewConn_Click(NewConn, null);
+                var Reboot = ssh.RunCommand("sudo reboot now");
             } catch (Renci.SshNet.Common.SshConnectionException) {
                 var ErrorConnection = MessageBox.Show("Server reboot",
                     "Client is disconnected",
@@ -124,8 +124,8 @@ namespace Monitoring {
 
         private void ShutdownBtn(object sender, EventArgs e) {
             try {
-                var shutdown = ssh.RunCommand("sudo shutdown now");
                 NewConn_Click(NewConn, null);
+                var shutdown = ssh.RunCommand("sudo shutdown now");
             } catch (Renci.SshNet.Common.SshConnectionException) {
                 var ErrorConnection = MessageBox.Show("Server reboot",
                     "Client is disconnected",
