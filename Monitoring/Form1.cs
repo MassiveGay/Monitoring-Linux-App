@@ -149,6 +149,7 @@ namespace Monitoring {
         
         private void NewConn_Click(object sender, EventArgs e) {
             ssh.Disconnect();
+            Connection.Enabled = true;
             ConnGroup.Enabled = true;
             name_list.SelectedIndex = -1;
             ftpLog.Text = "Login";

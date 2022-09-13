@@ -517,6 +517,7 @@
             this.MainGroup.ResumeLayout(false);
             this.ResumeLayout(false);
         }
+        
 
         private System.Windows.Forms.GroupBox MainGroup;
 

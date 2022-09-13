@@ -11,7 +11,8 @@ using System.Windows.Forms;
 using Renci.SshNet;
 
 namespace Monitoring {
-    public partial class Form3 : Form {
+    public partial class Form3 : Form 
+    {
         SshClient ssh;
         public Form3() {
             InitializeComponent();
