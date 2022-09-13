@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Renci.SshNet;
 using Renci.SshNet.Common;
 using System.Diagnostics;
+using Monitoring.Properties;
 
 namespace Monitoring {
     public partial class Form1 : Form {
@@ -19,6 +20,9 @@ namespace Monitoring {
 
         public Form1() {
             InitializeComponent();
+            AddresLine.Text = Settings.Default["SaveHost"].ToString();
+            UsernameLine.Text = Settings.Default["SaveUsername"].ToString();
+            PortLine.Text = Settings.Default["SavePort"].ToString();
         }
 
         async void autoTemperatureUpdate() {
@@ -45,6 +49,10 @@ namespace Monitoring {
                 int port = int.Parse(PortLine.Text);
                 string userName = UsernameLine.Text;
                 string password = PasswordLine.Text;
+                Settings.Default["SaveHost"] = AddresLine.Text;
+                Settings.Default["SaveUsername"] = UsernameLine.Text;
+                Settings.Default["SavePort"] = PortLine.Text;
+                Settings.Default.Save();
                 ssh = new SshClient(adres, port, userName, password);
                 ssh.Connect();
                 //
@@ -74,20 +82,10 @@ namespace Monitoring {
             }
         }
         public void GUIonConnect() {
-            packageInstallgroup.Enabled = true;
             NewConn.Enabled = true;
-            ControlGroup.Enabled = true;
-            SystemctlGroup.Enabled = true;
-            isConnected = true;
-            TempBox.Enabled = true;
-            AddresLine.Enabled = false;
-            UsernameLine.Enabled = false;
-            PasswordLine.Enabled = false;
+            MainGroup.Enabled = true;
+            ConnGroup.Enabled = false;
             Connection.Enabled = false;
-            DiskInfo_group.Enabled = true;
-            ftpGroup.Enabled = true;
-            Fail2ban_group.Enabled = true;
-            PortLine.Enabled = false;
         }
 
         private void onStatusBtnClick(object sender, EventArgs e) {
@@ -112,13 +110,8 @@ namespace Monitoring {
         }
 
         private void RebootBtn(object sender, EventArgs e) {
-            ControlGroup.Enabled = false;
-            SystemctlGroup.Enabled = false;
-            isConnected = false;
-            TempBox.Enabled = false;
-            var Reboot = ssh.RunCommand("sudo reboot now");
             try {
-                ssh.Disconnect();
+                var Reboot = ssh.RunCommand("sudo reboot now");
                 NewConn_Click(NewConn, null);
             } catch (Renci.SshNet.Common.SshConnectionException) {
                 var ErrorConnection = MessageBox.Show("Server reboot",
@@ -130,13 +123,8 @@ namespace Monitoring {
         }
 
         private void ShutdownBtn(object sender, EventArgs e) {
-            ControlGroup.Enabled = false;
-            SystemctlGroup.Enabled = false;
-            isConnected = false;
-            TempBox.Enabled = false;
-            var shutdown = ssh.RunCommand("sudo shutdown now");
             try {
-                ssh.Disconnect();
+                var shutdown = ssh.RunCommand("sudo shutdown now");
                 NewConn_Click(NewConn, null);
             } catch (Renci.SshNet.Common.SshConnectionException) {
                 var ErrorConnection = MessageBox.Show("Server reboot",
@@ -145,30 +133,20 @@ namespace Monitoring {
                     MessageBoxIcon.Information);
             }
         }
-
+        
         private void NewConn_Click(object sender, EventArgs e) {
-            name_list.Items.IndexOf(-1);
+            ssh.Disconnect();
+            ConnGroup.Enabled = true;
+            name_list.SelectedIndex = -1;
             ftpLog.Text = "Login";
             ftpPass.Text = "Password";
             name_list.Items.Clear();
             systemctlOut.Clear();
-            PortLine.Enabled = true;
-            packageInstallgroup.Enabled = false;
-            ftpGroup.Enabled = false;
-            DiskInfo.Value = 0;
-            ControlGroup.Enabled = false;
-            SystemctlGroup.Enabled = false;
-            isConnected = false;
-            TempBox.Enabled = false;
-            DiskInfo_group.Enabled = false;
             AddresLine.Clear();
             UsernameLine.Clear();
             PasswordLine.Clear();
-            UsernameLine.Enabled = true;
-            AddresLine.Enabled = true;
-            PasswordLine.Enabled = true;
-            Connection.Enabled = true;
-            Fail2ban_group.Enabled = false;
+            DiskInfo.Value = int.Parse("0");
+            MainGroup.Enabled = false;
         }
 
         private void ftpOpen(object sender, EventArgs e) {
