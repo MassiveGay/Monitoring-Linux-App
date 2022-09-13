@@ -41,7 +41,8 @@ namespace Monitoring {
         }
 
         private void onConnectClick(object sender, EventArgs e) {
-            try {
+            try
+            {
                 if (isConnected)
                     ssh.Disconnect();
                 //
@@ -63,20 +64,32 @@ namespace Monitoring {
                 var procentUsed = ssh.RunCommand("df -h / --output=pcent").Result;
                 string deleteBlyat = procentUsed.Substring(4);
                 string[] lines = deleteBlyat.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                string DiskUsed = string.Join("\n", lines.Where(s => s.EndsWith("%")).Select(s => s.Remove(s.IndexOf('%'))));
+                string DiskUsed = string.Join("\n",
+                    lines.Where(s => s.EndsWith("%")).Select(s => s.Remove(s.IndexOf('%'))));
                 DiskInfo.Value = int.Parse(DiskUsed);
                 //
                 GUIonConnect();
                 autoTemperatureUpdate();
                 //
-            } catch (Renci.SshNet.Common.SshAuthenticationException) {
+            }
+            catch (Renci.SshNet.Common.SshAuthenticationException)
+            {
                 var hhhh = MessageBox.Show("Incorrect data"
                     , "Problems with access to JoyCasino",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-            }catch (System.Net.Sockets.SocketException) {
+            }
+            catch (System.Net.Sockets.SocketException)
+            {
                 var ErrorConnection = MessageBox.Show("Incorrect addres"
                     , "Problems with access to JoyCasino",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+            catch (System.ArgumentException)
+            {
+                var ErrorConnection = MessageBox.Show("Check if the fields are filled"
+                    , "The field is empty",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
