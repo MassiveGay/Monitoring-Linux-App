@@ -36,10 +36,76 @@ namespace Monitoring {
                     } catch { return ""; }
 
                 });
-                await Task.Run(() => Thread.Sleep(2000));
+                await Task.Run(() => Thread.Sleep(500));
             }
         }
+        //Получаю процент использования процессора дефолтными функциями
+        async void CpuUsed() {
+            while (true) {
+                textBox1.Text = await Task.Run(() => {
+                    try {
+                        var conclusion = ssh.RunCommand("awk '{u=$2+$4; t=$2+$4+$5; if (NR==1){u1=u; t1=t;} else print ($2+$4-u1) * 100 / (t-t1); }' <(grep 'cpu ' /proc/stat) <(sleep 1;grep 'cpu ' /proc/stat)");
+                        return conclusion.Result;
+                    } catch { return ""; }
 
+                });
+                await Task.Run(() => Thread.Sleep(500));
+            }
+        }
+        //Получаю оперативку дефолтными функциями в килобайтах
+        async void RAM() {
+            while (true) {
+                progressBar1.Value = int.Parse(await Task.Run(() => {
+                    try {
+                        var memTotal = ssh.RunCommand("vmstat -s | grep -i 'total memory' | sed 's/ *//'").Result;
+                        string[] total = memTotal.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        string mem = string.Join("\n",
+                            total.Where(s => s.EndsWith("y")).Select(s => s.Remove(s.IndexOf('K'))));
+                        progressBar1.Maximum = int.Parse(mem);
+                        var memUsed = ssh.RunCommand("vmstat -s | grep -i 'used memory' | sed 's/ *//'").Result;
+                        string[] Used = memUsed.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        string memU = string.Join("\n",
+                            Used.Where(s => s.EndsWith("y")).Select(s => s.Remove(s.IndexOf('K'))));
+                        int convertTotal = int.Parse(mem) / 1000000;
+                        int convertUsed = int.Parse(memU) / 1000000;
+                        RAM_label.Text = $"{convertUsed}Gb/{convertTotal}Gb";
+                        return memU;
+                    } catch { return ""; }
+
+                }));
+                await Task.Run(() => Thread.Sleep(500));
+            }
+        }
+        //Обновляю прогрессбар с местом на системном диске
+        async void SystemDisk() {
+            while (true) {
+                DiskInfo.Value = int.Parse(await Task.Run(() => {
+                    try {
+                        var procentUsed = ssh.RunCommand("df -h / --output=pcent").Result;
+                        string deleteBlyat = procentUsed.Substring(4);
+                        string[] lines = deleteBlyat.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        string DiskUsed = string.Join("\n",
+                            lines.Where(s => s.EndsWith("%")).Select(s => s.Remove(s.IndexOf('%'))));
+                        Disk_label.Text = DiskUsed + "%";
+                        return DiskUsed;
+                    } catch { return ""; }
+
+                }));
+                await Task.Run(() => Thread.Sleep(500));
+            }
+        }
+        async void DaemonStatusOutput() {
+                    while (true) {
+                        systemctlOut.Text = await Task.Run(() => {
+                            try {
+                                var systemctlStatus = ssh.RunCommand("systemctl status " + name_list.Text).Result;
+                                return systemctlStatus;
+                            } catch { return ""; }
+        
+                        });
+                        await Task.Run(() => Thread.Sleep(500));
+                    }
+                }
         private void onConnectClick(object sender, EventArgs e) {
             try
             {
@@ -50,10 +116,12 @@ namespace Monitoring {
                 int port = int.Parse(PortLine.Text);
                 string userName = UsernameLine.Text;
                 string password = PasswordLine.Text;
+                //Сохранение данных подключения
                 Settings.Default["SaveHost"] = AddresLine.Text;
                 Settings.Default["SaveUsername"] = UsernameLine.Text;
                 Settings.Default["SavePort"] = PortLine.Text;
                 Settings.Default.Save();
+                //
                 ssh = new SshClient(adres, port, userName, password);
                 ssh.Connect();
                 //
@@ -61,15 +129,12 @@ namespace Monitoring {
                 String[] words = DaemonNames.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 name_list.Items.AddRange(words);
                 //
-                var procentUsed = ssh.RunCommand("df -h / --output=pcent").Result;
-                string deleteBlyat = procentUsed.Substring(4);
-                string[] lines = deleteBlyat.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                string DiskUsed = string.Join("\n",
-                    lines.Where(s => s.EndsWith("%")).Select(s => s.Remove(s.IndexOf('%'))));
-                DiskInfo.Value = int.Parse(DiskUsed);
-                //
                 GUIonConnect();
+                CpuUsed();
                 autoTemperatureUpdate();
+                RAM();
+                SystemDisk();
+                DaemonStatusOutput();
                 //
             }
             catch (Renci.SshNet.Common.SshAuthenticationException)
@@ -99,12 +164,6 @@ namespace Monitoring {
             MainGroup.Enabled = true;
             ConnGroup.Enabled = false;
             Connection.Enabled = false;
-        }
-
-        private void onStatusBtnClick(object sender, EventArgs e) {
-            string Service_Name = name_list.Text;
-            var systemctlStatus = ssh.RunCommand("systemctl status " + Service_Name).Result;
-            systemctlOut.Text = systemctlStatus;
         }
 
         private void onStartBtnCLick(object sender, EventArgs e) {
@@ -152,8 +211,6 @@ namespace Monitoring {
             Connection.Enabled = true;
             ConnGroup.Enabled = true;
             name_list.SelectedIndex = -1;
-            ftpLog.Text = "Login";
-            ftpPass.Text = "Password";
             name_list.Items.Clear();
             systemctlOut.Clear();
             AddresLine.Clear();
@@ -163,23 +220,11 @@ namespace Monitoring {
             MainGroup.Enabled = false;
         }
 
-        private void ftpOpen(object sender, EventArgs e) {
-            Process.Start("explorer.exe", $"ftp://{ftpLog.Text}:{ftpPass.Text}@{AddresLine.Text}");
-        }
-
         private void UpdateCollection_Click(object sender, EventArgs e) {
             name_list.Items.Clear();
             var names = ssh.RunCommand("ls /etc/systemd/system | grep .service").Result;
             String[] words = names.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             name_list.Items.AddRange(words);
-        }
-
-        private void onButtonInstallClick(object sender, EventArgs e) {
-            var Install = ssh.RunCommand($"sudo apt install -y {packageNameText.Text}");
-        }
-
-        private void onRemoveButtonClick(object sender, EventArgs e) {
-            var Remove = ssh.RunCommand($"sudo apt remove -y {packageNameText.Text}");
         }
 
         private void OpenForm3_Click(object sender, EventArgs e) {
@@ -197,9 +242,29 @@ namespace Monitoring {
             }
         }
         private void AddresLine_TextChanged(object sender, EventArgs e) {
-
         }
         private void DiskUsedProgressBar(object sender, EventArgs e) {
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e) {
+        }
+
+        private void button6_Click(object sender, EventArgs e) {
+            SSH_Data_Transf.Adres = AddresLine.Text;
+            SSH_Data_Transf.Port = PortLine.Text;
+            SSH_Data_Transf.Username = UsernameLine.Text;
+            SSH_Data_Transf.Password = PasswordLine.Text;
+            Form f = new Form2();
+            f.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e) {
+            SSH_Data_Transf.Adres = AddresLine.Text;
+            SSH_Data_Transf.Port = PortLine.Text;
+            SSH_Data_Transf.Username = UsernameLine.Text;
+            SSH_Data_Transf.Password = PasswordLine.Text;
+            Form f = new DaemonList();
+            f.Show();
         }
     }
 }
