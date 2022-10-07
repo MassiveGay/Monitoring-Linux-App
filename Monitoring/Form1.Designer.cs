@@ -26,8 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.Connection = new System.Windows.Forms.Button();
             this.AddresLine = new System.Windows.Forms.TextBox();
@@ -64,7 +63,6 @@
             this.MainGroup = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.RAM_label = new System.Windows.Forms.Label();
@@ -144,10 +142,10 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(6, 22);
+            this.richTextBox1.Location = new System.Drawing.Point(5, 13);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(120, 36);
+            this.richTextBox1.Size = new System.Drawing.Size(122, 58);
             this.richTextBox1.TabIndex = 10;
             this.richTextBox1.Text = "";
             // 
@@ -418,35 +416,25 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(349, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(83, 77);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "CPU";
+            this.groupBox1.Text = "CPU%";
             // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(6, 18);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(59, 20);
+            this.textBox1.Size = new System.Drawing.Size(71, 20);
             this.textBox1.TabIndex = 12;
-            // 
-            // label7
-            // 
-            this.label7.Location = new System.Drawing.Point(65, 18);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(12, 20);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "%";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label3.Location = new System.Drawing.Point(6, 41);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(71, 33);
@@ -469,11 +457,11 @@
             // 
             // RAM_label
             // 
-            this.RAM_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RAM_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.RAM_label.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.RAM_label.Location = new System.Drawing.Point(0, 36);
+            this.RAM_label.Location = new System.Drawing.Point(6, 36);
             this.RAM_label.Name = "RAM_label";
-            this.RAM_label.Size = new System.Drawing.Size(133, 22);
+            this.RAM_label.Size = new System.Drawing.Size(121, 22);
             this.RAM_label.TabIndex = 3;
             this.RAM_label.Text = "???/???";
             this.RAM_label.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -540,8 +528,6 @@
         }
 
         private System.Windows.Forms.Button button1;
-
-        private System.Windows.Forms.Label label7;
 
         private System.Windows.Forms.TextBox textBox1;
 
